@@ -1,28 +1,31 @@
 package services
 
 import (
-	"fmt"
+	"go-simple-crud-webservice/models"
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-func GenerateJWT(userID, role string) (string, error) {
-	var secretkey = "e2922901-f374-4283-a1ad-0e3c6d06011f"
+func CreateToken(userID, role string) (*models.TokenDetails, error) {
+	var secretkey = os.Getenv("ACCESS_SECRET")
 	var mySigningKey = []byte(secretkey)
+	var err error
 
-	claims := jwt.MapClaims{}
-	claims["authorized"] = true
-	claims["userID"] = userID
-	claims["role"] = role
-	claims["exp"] = time.Now().Add(time.Minute * 60).Unix()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	td := &models.TokenDetails{}
+	td.AtExpires = time.Now().Add(time.Minute * 30).Unix()
 
-	tokenString, err := token.SignedString(mySigningKey)
-
+	atClaims := jwt.MapClaims{}
+	atClaims["authorized"] = true
+	atClaims["userID"] = userID
+	atClaims["role"] = role
+	atClaims["exp"] = td.AtExpires
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	td.AccessToken, err = at.SignedString([]byte(mySigningKey))
 	if err != nil {
-		fmt.Errorf("Something Went Wrong: %s", err.Error())
-		return "", err
+		return nil, err
 	}
-	return tokenString, nil
+
+	return td, nil
 }

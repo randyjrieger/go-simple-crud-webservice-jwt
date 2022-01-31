@@ -5,3 +5,9 @@ type Token struct {
 	UserId      string `json:"userId"`
 	TokenString string `json:"token"`
 }
+
+type TokenDetails struct {
+	AccessToken string
+	AccessUuid  string
+	AtExpires   int64
+}

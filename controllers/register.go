@@ -17,7 +17,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("got here")
-	validToken, err := services.GenerateJWT(creds.UserId, "customer")
+	td, err := services.CreateToken(creds.UserId, "customer")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Failed to generate token"))
@@ -29,7 +29,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	var token models.Token
 	token.UserId = creds.UserId
 	token.Role = "customer"
-	token.TokenString = validToken
+	token.TokenString = td.AccessToken
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(token)
 }

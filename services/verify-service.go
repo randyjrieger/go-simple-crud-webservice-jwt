@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
@@ -21,7 +22,7 @@ func ExtractToken(r *http.Request) string {
 
 func VerifyToken(r *http.Request) (*jwt.Token, error) {
 	tokenString := ExtractToken(r)
-	var secretkey = "e2922901-f374-4283-a1ad-0e3c6d06011f"
+	var secretkey = os.Getenv("ACCESS_SECRET")
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		//Make sure that the token method conform to "SigningMethodHMAC"
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -39,11 +40,10 @@ func TokenValid(r *http.Request) error {
 	token, err := VerifyToken(r)
 
 	if err != nil {
-		fmt.Println(err)
+		// example of error here is 'Token is expired'
 		return err
 	}
 	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
-		fmt.Println("2", err)
 		return err
 	}
 	return nil

@@ -15,7 +15,12 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("verify")
 
-	services.TokenValid(r)
+	err := services.TokenValid(r)
+	if err != nil {
+		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write([]byte(err.Error()))
+		return
+	}
 
 	fmt.Println("create")
 	u, err := parseRequest(r)
@@ -29,6 +34,14 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
+
+	err := services.TokenValid(r)
+	if err != nil {
+		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
 	fmt.Println("update")
 	vars := mux.Vars(r)
 	userId := vars["userId"]
@@ -62,6 +75,14 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func RemoveUser(w http.ResponseWriter, r *http.Request) {
+
+	err := services.TokenValid(r)
+	if err != nil {
+		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
 	vars := mux.Vars(r)
 	userId := vars["userId"]
 
@@ -80,6 +101,14 @@ func RemoveUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
+
+	err := services.TokenValid(r)
+	if err != nil {
+		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
 	fmt.Println("get")
 
 	vars := mux.Vars(r)
@@ -101,6 +130,14 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
+
+	err := services.TokenValid(r)
+	if err != nil {
+		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
 	fmt.Println("get all")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(models.GetUsers())
