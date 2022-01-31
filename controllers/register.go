@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"go-simple-crud-webservice/models"
 	"go-simple-crud-webservice/services"
 	"net/http"
@@ -16,7 +15,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Could not parse User object"))
 		return
 	}
-	fmt.Println("got here")
+
 	td, err := services.CreateToken(creds.UserId, "customer")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

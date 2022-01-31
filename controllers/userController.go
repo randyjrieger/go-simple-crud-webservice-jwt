@@ -13,8 +13,6 @@ import (
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("verify")
-
 	err := services.TokenValid(r)
 	if err != nil {
 		w.WriteHeader(http.StatusNotAcceptable)
@@ -22,7 +20,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("create")
 	u, err := parseRequest(r)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -42,7 +39,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("update")
 	vars := mux.Vars(r)
 	userId := vars["userId"]
 
@@ -109,8 +105,6 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("get")
-
 	vars := mux.Vars(r)
 	userId := vars["userId"]
 
@@ -138,7 +132,6 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("get all")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(models.GetUsers())
 	w.WriteHeader(http.StatusOK)
